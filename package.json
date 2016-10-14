@@ -1,0 +1,11 @@
+{
+	"name": "Ecommerce-Amazon-Clone",
+	"main": "server.js",
+	"dependencies": {
+		"express": "4.14.0",
+		"morgan": "1.7.0",
+		"body-parser": "1.15.2",
+		"mongoose": "4.6.3",
+		"bcrypt-nodejs": "0.0.3"
+	}
+}
