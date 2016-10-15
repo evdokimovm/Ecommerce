@@ -6,6 +6,11 @@
 		"morgan": "1.7.0",
 		"body-parser": "1.15.2",
 		"mongoose": "4.6.3",
-		"bcrypt-nodejs": "0.0.3"
+		"bcrypt-nodejs": "0.0.3",
+		"ejs": "2.5.2",
+		"ejs-mate": "2.3.0",
+		"express-session": "1.14.1",
+		"cookie-parser": "1.4.3",
+		"express-flash": "0.0.2"
 	}
 }
