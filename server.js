@@ -63,6 +63,9 @@ app.use(userRoutes)
 var adminRoutes = require('./routes/admin')
 app.use(adminRoutes)
 
+var apiRoutes = require('./api/api')
+app.use('/api', apiRoutes)
+
 app.listen(secret.port, function() {
 	console.log('Node.js listening on port ' + secret.port)
 })
