@@ -1,5 +1,7 @@
 var router = require('express').Router()
+var async = require('async')
 var User = require('../models/user')
+var Cart = require('../models/cart')
 var passport = require('passport')
 var passportConfig = require('../config/passport')
 
@@ -32,27 +34,42 @@ router.get('/signup', function(req, res, next) {
 })
 
 router.post('/signup', function(req, res, next) {
-	var user = new User()
 
-	user.profile.name = req.body.name
-	user.password = req.body.password
-	user.email = req.body.email
-	user.profile.picture = user.gravatar()
+	async.waterfall([
+		function(callback) {
+			var user = new User()
 
-	User.findOne({ email: req.body.email }, function(err, existingUser) {
-		if (existingUser) {
-			req.flash('errors', 'Account with that email address already exist')
-			return res.redirect('/signup')
-		} else {
-			user.save(function(err, user) {
-				if (err) return next(err)
+			user.profile.name = req.body.name
+			user.password = req.body.password
+			user.email = req.body.email
+			user.profile.picture = user.gravatar()
+
+			User.findOne({ email: req.body.email }, function(err, existingUser) {
+				if (existingUser) {
+					req.flash('errors', 'Account with that email address already exist')
+					return res.redirect('/signup')
+				} else {
+					user.save(function(err, user) {
+						if (err) return next(err)
+						callback(null, user)
+					})
+				}
+			})
+		},
+		function(user) {
+			var cart = new Cart()
+
+			cart.owner = user._id
+
+			cart.save(function(err) {
+				if(err) return next(err)
 				req.logIn(user, function(err) {
 					if (err) return next(err)
 					res.redirect('/profile')
 				})
 			})
 		}
-	})
+	])
 })
 
 router.get('/edit-profile', function(req, res, next) {
