@@ -3,6 +3,14 @@
 <div class="container">
 	<div class="row">
 		<div class="col-lg-6">
+			<% if (message.length > 0) { %>
+				<div class="alert alert-success alert-dismissible">
+					<button type="button" class="close" data-dismmiss="alert" aria-label>
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<%= message %>
+				</div>
+			<% } %>
 			<% for(var i = 0; i < foundCart.items.length; i++) { %>
 				<div class="list-group">
 					<span class="list-group-item">
@@ -18,6 +26,12 @@
 							<div class="col-md-3">
 								<p><%= foundCart.items[i].quantity %></p>
 								<p><%= foundCart.items[i].price %></p>
+
+								<form method="post" action="/remove">
+									<input type="hidden" name="item" value="<%= foundCart.items[i]._id %>">
+									<input type="hidden" name="price" value="<%= foundCart.items[i].price %>">
+									<button type="submit" class="btn">Remove</button>
+								</form>
 							</div>
 						</div>
 					</span>
