@@ -1,4 +1,6 @@
 $(function() {
+	Stripe.setPublishableKey('PUBLIC_KEY')
+
 	$('#search').keyup(function(event) {
 		event.preventDefault()
 
@@ -69,5 +71,27 @@ $(function() {
 		$('#quantity').val(quantity)
 		$('#priceValue').val(priceValue.toFixed(2))
 		$('#total').html(quantity)
+	})
+
+	function stripeResponseHandler(status, response) {
+		var $form = $('#payment-form')
+
+		if (response.error) {
+			$form.find('.payment-errors').text(response.error.message)
+			$form.find('.submit').prop('disabled', false)
+		} else {
+			var token = response.id
+			$form.append($('<input type="hidden" name="stripeToken">').val(token))
+			$form.get(0).submit()
+		}
+	}
+
+	var $form = $('#payment-form')
+	$form.submit(function(event) {
+		$form.find('.submit').prop('disabled', true)
+
+		Stripe.card.createToken($form, stripeResponseHandler)
+
+		return false
 	})
 })
