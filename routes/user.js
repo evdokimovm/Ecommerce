@@ -19,9 +19,12 @@ router.post('/login', passport.authenticate('local-login', {
 }))
 
 router.get('/profile', passportConfig.isAuthenticated, function(req, res, next) {
-	User.findOne({ _id: req.user._id }, function(err, user) {
+	User
+		.findOne({ _id: req.user._id })
+		.populate('history.item')
+		.exec(function(err, foundUser) {
 		res.render('accounts/profile', {
-			user: user
+			user: foundUser
 		})
 	})
 })
