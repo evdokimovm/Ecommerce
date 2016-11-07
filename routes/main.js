@@ -51,6 +51,8 @@ stream.on('error', function(err) {
 })
 
 router.get('/cart', function(req, res, next) {
+	if (!req.user) res.redirect('/login')
+
 	Cart
 		.findOne({
 			owner: req.user._id
