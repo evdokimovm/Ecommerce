@@ -12,6 +12,9 @@ var UserSchema = new Schema({
 	},
 	password: String,
 
+	facebook: String,
+	tokens: Array,
+
 	profile: {
 		name: {
 			type: String,

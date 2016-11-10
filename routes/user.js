@@ -75,6 +75,15 @@ router.post('/signup', function(req, res, next) {
 	])
 })
 
+router.get('/auth/facebook', passport.authenticate('facebook', {
+	scope: 'email'
+}))
+
+router.get('/auth/facebook/callback', passport.authenticate('facebook', {
+	successRedirect: '/profile',
+	failureRedirect: '/login'
+}))
+
 router.get('/edit-profile', function(req, res, next) {
 	res.render('accounts/edit-profile', {
 		message: req.flash('success')
