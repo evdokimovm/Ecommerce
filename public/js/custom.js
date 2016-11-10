@@ -37,20 +37,20 @@ $(function() {
 			},
 			dataType: 'json',
 			success: function(json) {
-				var data = json.hits.hits.map(function(hit) {
+				var data = json.map(function(hit) {
 					return hit
 				})
-				console.log(data)
 				$('#searchResults').empty()
 				for (var i = 0; i < data.length; i++) {
 					var html = `
 						<div class="col-md-4">
-							<a href="/product/${data[i]._source._id}">
+							<a href="/product/${data[i]._id}">
 								<div class="thumbnail">
-									<img src="${data[i]._source.image}">
+									<img src="${data[i].image}">
 									<div class="caption">
-										<h3>${data[i]._source.name}</h3>
-										<p>$${data[i]._source.price}</p>
+										<h3>${data[i].name}</h3>
+										<p>${data[i].category.name}</p>
+										<p>$${data[i].price}</p>
 									</div>
 								</div>
 							</a>

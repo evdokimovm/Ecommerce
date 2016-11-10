@@ -5,14 +5,19 @@ var Category = require('../models/category')
 var Product = require('../models/product')
 
 router.post('/search', function(req, res, next) {
-	Product.search({
-		query_string: {
-			query: req.body.search_term
-		}
-	}, function(err, results) {
-		if (err) return next(err)
-		res.json(results)
-	})
+	Product
+		.find({
+			name: {
+				$regex: req.body.search_term,
+				$options: 'i'
+			}
+		})
+		.populate('category')
+		.lean()
+		.exec(function(err, results) {
+			if (err) return next(err)
+			res.json(results)
+		})
 })
 
 router.get('/:name', function(req, res, next) {

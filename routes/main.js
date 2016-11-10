@@ -25,31 +25,6 @@ function paginate(req, res, next) {
 		})
 }
 
-Product.createMapping(function(err, mapping) {
-	if (err) {
-		console.log('Error Creating Mapping')
-		console.log(err)
-	} else {
-		console.log('Mapping Created')
-		console.log(mapping)
-	}
-})
-
-var stream = Product.synchronize()
-var count = 0
-
-stream.on('data', function(err, doc) {
-	count++
-})
-
-stream.on('close', function() {
-	console.log('Indexed ' + count + ' documents!')
-})
-
-stream.on('error', function(err) {
-	console.log(err)
-})
-
 router.get('/cart', function(req, res, next) {
 	if (!req.user) res.redirect('/login')
 
@@ -108,20 +83,22 @@ router.post('/search', function(req, res, next) {
 
 router.get('/search', function(req, res, next) {
 	if (req.query.q) {
-		Product.search({
-			query_string: {
-				query: req.query.q
-			}
-		}, function(err, results) {
-			if (err) return next(err)
-			var data = results.hits.hits.map(function(hit) {
-				return hit
+		Product
+			.find({
+				name: {
+					$regex: req.query.q,
+					$options: 'i'
+				}
 			})
-			res.render('main/search-result', {
-				query: req.query.q,
-				data: data
+			.populate('category')
+			.lean()
+			.exec(function(err, products) {
+				if (err) return next(err)
+				res.render('main/search-result', {
+					query: req.query.q,
+					data: products
+				})
 			})
-		})
 	}
 })
 
