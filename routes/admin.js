@@ -5,10 +5,19 @@ var Category = require('../models/category')
 var Product = require('../models/product')
 
 router.get('/add-category', function(req, res, next) {
-	res.render('admin/add-category', {
-		message: req.flash('success'),
-		error: req.flash('error')
-	})
+	if (req.user) {
+		if (!req.user.isAdmin) {
+			req.flash('error', 'For Access to Add Category Page You Need to have Admin Privileges')
+			res.redirect('/edit-profile')
+		} else {
+			res.render('admin/add-category', {
+				message: req.flash('success'),
+				error: req.flash('error')
+			})
+		}
+	} else {
+		res.redirect('/login')
+	}
 })
 
 router.post('/add-category', function(req, res, next) {
@@ -24,9 +33,18 @@ router.post('/add-category', function(req, res, next) {
 })
 
 router.get('/add-product', function(req, res, next) {
-	res.render('admin/add-product', {
-		message: req.flash('success')
-	})
+	if (req.user) {
+		if (!req.user.isAdmin) {
+			req.flash('error', 'For Access to Add Product Page You Need to have Admin Privileges')
+			res.redirect('/edit-profile')
+		} else {
+			res.render('admin/add-product', {
+				message: req.flash('success')
+			})
+		}
+	} else {
+		res.redirect('/login')
+	}
 })
 
 router.post('/add-product', function(req, res, next) {
@@ -38,10 +56,20 @@ router.post('/add-product', function(req, res, next) {
 				if (err) return next(err)
 
 				if (!category || category === 'null' || category === 'undefined') {
-					req.flash('error', 'First, You Need to Create this Category Here')
-					res.redirect('/add-category')
+					if (req.user.isAdmin) {
+						req.flash('error', 'First You Need to Create this Category Here')
+						res.redirect('/add-category')
+					} else if (!req.user.isAdmin) {
+						req.flash('error', 'For Access to Add Category You Need to have Admin Privileges')
+						res.redirect('/edit-profile')
+					}
 				} else {
-					callback(null, category)
+					if (req.user.isAdmin) {
+						callback(null, category)
+					} else if (!req.user.isAdmin) {
+						req.flash('error', 'For Access to Add Products to Category You Need to have Admin Privileges')
+						res.redirect('/edit-profile')
+					}
 				}
 			})
 		},
