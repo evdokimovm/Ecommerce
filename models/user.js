@@ -26,6 +26,11 @@ var UserSchema = new Schema({
 		}
 	},
 
+	isAdmin: {
+		type: Boolean,
+		default: false
+	},
+
 	address: String,
 	history: [{
 		paid: {

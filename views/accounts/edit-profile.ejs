@@ -51,6 +51,21 @@
 					</div>
 				</div>
 			</form>
+			<% if (!user.isAdmin) { %>
+				<br>
+				<h1>Set Admin</h1>
+				<form method="post" action="/api/set-admin">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="form-group">
+								<label="name">Invite: </label>
+								<input type="password" class="form-control" name="invite">
+							</div>
+							<button type="submit" class="btn btn-success">Set Admin</button>
+						</div>
+					</div>
+				</form>
+			<% } %>
 		</div>
 	</div>
 </div>

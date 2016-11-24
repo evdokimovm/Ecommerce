@@ -1,6 +1,7 @@
 var router = require('express').Router()
 var async = require('async')
 var faker = require('faker')
+var secret = require('../config/secret')
 var Category = require('../models/category')
 var Product = require('../models/product')
 var User = require('../models/user')
@@ -19,6 +20,26 @@ router.post('/search', function(req, res, next) {
 			if (err) return next(err)
 			res.json(results)
 		})
+})
+
+router.post('/set-admin', function(req, res, next) {
+	if (req.body.invite == secret.invite) {
+		User.update({
+			_id: req.user._id
+		}, {
+			$set: {
+				isAdmin: true
+			}
+		}, function(err, updated) {
+			if(updated) {
+				req.flash('success', 'You Now Admin')
+				res.redirect('/edit-profile')
+			}
+		})
+	} else {
+		req.flash('error', 'Token not Correct')
+		res.redirect('/edit-profile')
+	}
 })
 
 router.post('/change-password', function(req, res, next) {
