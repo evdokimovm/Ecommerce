@@ -86,7 +86,8 @@ router.get('/auth/facebook/callback', passport.authenticate('facebook', {
 
 router.get('/edit-profile', function(req, res, next) {
 	res.render('accounts/edit-profile', {
-		message: req.flash('success')
+		message: req.flash('success'),
+		error: req.flash('error')
 	})
 })
 
