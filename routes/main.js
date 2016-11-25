@@ -26,20 +26,22 @@ function paginate(req, res, next) {
 }
 
 router.get('/cart', function(req, res, next) {
-	if (!req.user) res.redirect('/login')
-
-	Cart
-		.findOne({
-			owner: req.user._id
-		})
-		.populate('items.item')
-		.exec(function(err, foundCart) {
-			if(err) return next(err)
-			res.render('main/cart', {
-				foundCart: foundCart,
-				message: req.flash('remove')
+	if (!req.user) {
+		res.redirect('/login')
+	} else {
+		Cart
+			.findOne({
+				owner: req.user._id
 			})
-		})
+			.populate('items.item')
+			.exec(function(err, foundCart) {
+				if(err) return next(err)
+				res.render('main/cart', {
+					foundCart: foundCart,
+					message: req.flash('remove')
+				})
+			})
+	}
 })
 
 router.post('/product/:product_id', function(req, res, next) {

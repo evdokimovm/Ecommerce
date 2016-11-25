@@ -85,11 +85,14 @@ router.get('/auth/facebook/callback', passport.authenticate('facebook', {
 }))
 
 router.get('/edit-profile', function(req, res, next) {
-	if (!req.user) res.redirect('/login')
-	res.render('accounts/edit-profile', {
-		message: req.flash('success'),
-		error: req.flash('error')
-	})
+	if (!req.user) {
+		res.redirect('/login')
+	} else {
+		res.render('accounts/edit-profile', {
+			message: req.flash('success'),
+			error: req.flash('error')
+		})
+	}
 })
 
 router.post('/edit-profile', function(req, res, next) {
