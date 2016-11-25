@@ -70,6 +70,20 @@ app.use(adminRoutes)
 var apiRoutes = require('./api/api')
 app.use('/api', apiRoutes)
 
+app.use(function (req, res, next) {
+	res.status(400)
+	res.render('error', {
+		error: '404: File Not Found'
+	})
+})
+
+app.use(function (err, req, res, next) {
+	res.status(500)
+	res.render('error', {
+		error: '500: Internal Server Error'
+	})
+})
+
 app.listen(secret.port, function() {
 	console.log('Node.js listening on port ' + secret.port)
 })
