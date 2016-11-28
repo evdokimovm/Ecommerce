@@ -88,15 +88,9 @@ router.get('/edit-profile', function(req, res, next) {
 	if (!req.user) {
 		res.redirect('/login')
 	} else {
-		User
-			.findOne({ _id: req.user._id })
-			.populate('token')
-			.exec(function(err, foundUser) {
-			res.render('accounts/edit-profile', {
-				message: req.flash('success'),
-				error: req.flash('error'),
-				user: foundUser
-			})
+		res.render('accounts/edit-profile', {
+			message: req.flash('success'),
+			error: req.flash('error')
 		})
 	}
 })
@@ -111,6 +105,21 @@ router.get('/admin-page', function(req, res, next) {
 			req.flash('error', 'You Need Admin Account for Access to Admin Page')
 			res.redirect('/edit-profile')
 		}
+	}
+})
+
+router.get('/api-page', function(req, res, next) {
+	if (!req.user) {
+		res.redirect('/login')
+	} else {
+		User
+			.findOne({ _id: req.user._id })
+			.populate('token')
+			.exec(function(err, foundUser) {
+			res.render('accounts/api-page', {
+				user: foundUser
+			})
+		})
 	}
 })
 

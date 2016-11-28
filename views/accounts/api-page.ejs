@@ -1,0 +1,49 @@
+<% layout('layout') -%>
+
+<div class="container">
+	<div class="row">
+		<div class="col-lg-6 col-md-offset-3">
+			<% if (user.token) { %>
+				<h1>Your API Token</h1>
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="form-group">
+							<label="token">Token: </label>
+							<input id="token" type="text" class="form-control" name="token" value="<%= user.token.value %>" readonly>
+						</div>
+						<button id="copy" class="btn btn-success">Copy</button>
+					</div>
+				</div>
+			<% } else { %>
+				<h1>Get API Token</h1>
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<a href="/api/getToken" class="btn btn-success">Get Token</a>
+					</div>
+				</div>
+			<% } %>
+			<br>
+			<h1>API</h1>
+			<h3>Get All Users</h3>
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<% if (user.token) { %>
+						<input type="text" class="form-control" value="/api/getUsers?access_token=<%= user.token.value %>" readonly>
+					<% } else { %>
+						<input type="text" class="form-control" value="/api/getUsers?access_token=access_token" readonly>
+					<% } %>
+				</div>
+			</div>
+			<h3>Get All Products</h3>
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<% if (user.token) { %>
+						<input type="text" class="form-control" value="/api/getProducts?access_token=<%= user.token.value %>" readonly>
+					<% } else { %>
+						<input type="text" class="form-control" value="/api/getProducts?access_token=access_token" readonly>
+					<% } %>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

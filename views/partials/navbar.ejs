@@ -39,10 +39,11 @@
 					<ul class="dropdown-menu">
 						<li><a href="/profile">Profile</a></li>
 						<li><a href="/edit-profile">Edit Profile</a></li>
-						<li><a href="/logout">Logout</a></li>
 						<% if(user.isAdmin) { %>
 							<li><a href="/admin-page">Admin Page</a></li>
 						<% } %>
+						<li><a href="/api-page">API</a></li>
+						<li><a href="/logout">Logout</a></li>
 					</ul>
 				</li>
 			<% } %>

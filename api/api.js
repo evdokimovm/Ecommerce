@@ -20,7 +20,7 @@ router.get('/getToken', function(req, res) {
 		.exec(function(err, user) {
 			if (user.token == null) user.generateToken()
 			req.user = user
-			res.redirect('/edit-profile')
+			res.redirect('/api-page')
 		})
 })
 
