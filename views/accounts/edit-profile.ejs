@@ -19,7 +19,7 @@
 				</div>
 			<% } %>
 			<h1>Edit Profile</h1>
-			<form method="post">
+			<form method="post" action="/settings/edit-profile">
 				<div class="panel panel-default">
 					<div class="panel-body">
 						<div class="form-group">
@@ -37,7 +37,7 @@
 			<% if (!user.facebook) { %>
 				<br>
 				<h1>Change Password</h1>
-				<form method="post" action="/api/change-password">
+				<form method="post" action="/settings/change-password">
 					<div class="panel panel-default">
 						<div class="panel-body">
 							<div class="form-group">
@@ -77,7 +77,7 @@
 			<% if (!user.isAdmin) { %>
 				<br>
 				<h1>Set Admin</h1>
-				<form method="post" action="/api/set-admin">
+				<form method="post" action="/settings/set-admin">
 					<div class="panel panel-default">
 						<div class="panel-body">
 							<div class="form-group">

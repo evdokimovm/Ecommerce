@@ -67,6 +67,12 @@ app.use(userRoutes)
 var adminRoutes = require('./routes/admin')
 app.use(adminRoutes)
 
+var settingsRoutes = require('./routes/settings')
+app.use('/settings', settingsRoutes)
+
+var searchRoutes = require('./routes/search')
+app.use('/instant', searchRoutes)
+
 var apiRoutes = require('./api/api')
 app.use('/api', apiRoutes)
 

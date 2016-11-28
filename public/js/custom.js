@@ -31,7 +31,7 @@ $(function() {
 
 		$.ajax({
 			method: 'POST',
-			url: '/api/search',
+			url: '/instant/search',
 			data: {
 				search_term
 			},
