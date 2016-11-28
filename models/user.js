@@ -1,7 +1,9 @@
 var mongoose = require('mongoose')
 var bcrypt = require('bcrypt-nodejs')
 var crypto = require('crypto')
+var randToken = require('rand-token')
 var Schema = mongoose.Schema
+var Token = require('./token')
 
 // The user schema attributes / characteristics / fields
 var UserSchema = new Schema({
@@ -29,6 +31,12 @@ var UserSchema = new Schema({
 	isAdmin: {
 		type: Boolean,
 		default: false
+	},
+
+	token: {
+		type: Schema.Types.ObjectId,
+		ref: 'Token',
+		default: null
 	},
 
 	address: String,
@@ -63,6 +71,20 @@ UserSchema.pre('save', function(next) {
 		})
 	})
 })
+
+UserSchema.methods.generateToken = function() {
+	var user = this
+	var token = new Token()
+	token.value = randToken.generate(32)
+	token.user = user._id
+	user.token = token._id
+	user.save(function(err) {
+		if (err) throw err
+		token.save(function(err) {
+			if (err) throw err
+		})
+	})
+}
 
 // Compare password in the database and the one that the user type in
 UserSchema.methods.comparePassword = function(password) {

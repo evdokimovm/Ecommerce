@@ -1,10 +1,12 @@
 var passport = require('passport')
 var LocalStrategy = require('passport-local').Strategy
 var FacebookStrategy = require('passport-facebook').Strategy
+var BearerStrategy = require('passport-http-bearer').Strategy
 var secret = require('./secret')
 var async = require('async')
 var User = require('../models/user')
 var Cart = require('../models/cart')
+var Token = require('../models/token')
 
 // serialize and deserialize
 passport.serializeUser(function(user, done) {
@@ -82,6 +84,15 @@ passport.use(new FacebookStrategy(secret.facebook,
 		})
 	}
 ))
+
+passport.use(new BearerStrategy({}, function(token, done) {
+	Token.findOne({
+		value: token
+	}).populate('user').exec(function(err, token) {
+		if (!token) return done(null, false)
+		return done(null, token.user)
+	})
+}))
 
 // custom function to validate
 exports.isAuthenticated = function(req, res, next) {

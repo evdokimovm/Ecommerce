@@ -121,4 +121,14 @@ $(function() {
 
 		return false
 	})
+
+	var button = document.getElementById("copy")
+	var input = document.getElementById("token")
+
+	button.addEventListener("click", function(event) {
+		event.preventDefault()
+		input.select()
+		document.execCommand("copy")
+	})
+
 })

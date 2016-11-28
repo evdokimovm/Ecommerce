@@ -88,9 +88,15 @@ router.get('/edit-profile', function(req, res, next) {
 	if (!req.user) {
 		res.redirect('/login')
 	} else {
-		res.render('accounts/edit-profile', {
-			message: req.flash('success'),
-			error: req.flash('error')
+		User
+			.findOne({ _id: req.user._id })
+			.populate('token')
+			.exec(function(err, foundUser) {
+			res.render('accounts/edit-profile', {
+				message: req.flash('success'),
+				error: req.flash('error'),
+				user: foundUser
+			})
 		})
 	}
 })

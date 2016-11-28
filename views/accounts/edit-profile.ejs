@@ -53,6 +53,27 @@
 					</div>
 				</form>
 			<% } %>
+			<% if (user.token) { %>
+				<br>
+				<h1>Your API Token</h1>
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="form-group">
+							<label="token">Token: </label>
+							<input id="token" type="text" class="form-control" name="token" value="<%= user.token.value %>" readonly>
+						</div>
+						<button id="copy" class="btn btn-success">Copy</button>
+					</div>
+				</div>
+			<% } else { %>
+				<br>
+				<h1>Get API Token</h1>
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<a href="/api/getToken" class="btn btn-success">Get Token</a>
+					</div>
+				</div>
+			<% } %>
 			<% if (!user.isAdmin) { %>
 				<br>
 				<h1>Set Admin</h1>
