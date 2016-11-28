@@ -101,6 +101,19 @@ router.get('/edit-profile', function(req, res, next) {
 	}
 })
 
+router.get('/admin-page', function(req, res, next) {
+	if (!req.user) {
+		res.redirect('/login')
+	} else {
+		if (req.user.isAdmin) {
+			res.render('admin/admin-page')
+		} else {
+			req.flash('error', 'You Need Admin Account for Access to Admin Page')
+			res.redirect('/edit-profile')
+		}
+	}
+})
+
 router.get('/logout', function(req, res, next) {
 	req.logout()
 	res.redirect('/')
