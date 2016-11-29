@@ -1,6 +1,7 @@
 var router = require('express').Router()
 var Product = require('../models/product')
 var User = require('../models/user')
+var Token = require('../models/token')
 var passport = require('passport')
 var passportConfig = require('../config/passport')
 var fs = require('fs')
@@ -23,6 +24,30 @@ router.get('/getToken', function(req, res) {
 			req.user = user
 			res.redirect('/api-page')
 		})
+})
+
+router.get('/updateToken', function(req, res) {
+	Token.remove({
+		user: req.user._id
+	}, function(err) {
+		User.update({
+			_id: req.user._id
+		}, {
+			$set: {
+				token: null
+			}
+		}, function(err) {
+			User.findOne({
+				_id: req.user._id
+			})
+			.populate('token')
+			.exec(function(err, user) {
+				user.generateToken()
+				req.user = user
+				res.redirect('/api-page')
+			})
+		})
+	})
 })
 
 router.get('/getUsers', passport.authenticate('bearer', {session: false}), cors(), function(req, res) {
