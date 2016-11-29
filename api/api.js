@@ -4,6 +4,7 @@ var User = require('../models/user')
 var passport = require('passport')
 var passportConfig = require('../config/passport')
 var fs = require('fs')
+var cors = require('cors')
 
 router.use(function(req, res, next) {
 	fs.appendFile('log.txt', req.path + ' token: ' + req.query.access_token + '\n', function(err) {
@@ -24,7 +25,7 @@ router.get('/getToken', function(req, res) {
 		})
 })
 
-router.get('/getUsers', passport.authenticate('bearer', {session: false}), function(req, res) {
+router.get('/getUsers', passport.authenticate('bearer', {session: false}), cors(), function(req, res) {
 	User
 		.find({})
 		.populate('token')
@@ -40,7 +41,7 @@ router.get('/getUsers', passport.authenticate('bearer', {session: false}), funct
 		})
 })
 
-router.get('/getProducts', passport.authenticate('bearer', {session: false}), function(req, res) {
+router.get('/getProducts', passport.authenticate('bearer', {session: false}), cors(), function(req, res) {
 	Product
 		.find({})
 		.populate('category')
