@@ -33,6 +33,14 @@
 						<a href="/signup" class="btn btn-warning btn-lg">Signup to begin buying!</a>
 					<% } %>
 				</form>
+
+				<% if (user.isAdmin) { %>
+					<br>
+					<form method="post" action="/delete-product">
+						<input type="hidden" name="this_product_id" value="<%= product._id %>">
+						<button type="submit" class="btn btn-warning btn-lg">Delete Product</button>
+					</form>
+				<% } %>
 			</div>
 	</div>
 </div>

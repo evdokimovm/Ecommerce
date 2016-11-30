@@ -157,4 +157,13 @@ router.post('/delete-category', function(req, res, next) {
 	])
 })
 
+router.post('/delete-product', function(req, res, next) {
+	Product.remove({
+		_id: req.body.this_product_id
+	}, function(err, user) {
+		req.flash('success', 'Product Deleted')
+		res.redirect('/add-product')
+	})
+})
+
 module.exports = router
