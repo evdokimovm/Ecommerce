@@ -8,7 +8,7 @@ var fs = require('fs')
 var cors = require('cors')
 
 router.use(function(req, res, next) {
-	fs.appendFile('log.txt', req.path + ' token: ' + req.query.access_token + '\n', function(err) {
+	fs.appendFile('./logs/api-log.txt', req.path + ' token: ' + req.query.access_token + '\n', function(err) {
 		next()
 	})
 })
