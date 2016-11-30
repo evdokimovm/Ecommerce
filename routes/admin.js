@@ -48,7 +48,8 @@ router.get('/add-product', function(req, res, next) {
 			res.redirect('/edit-profile')
 		} else {
 			res.render('admin/add-product', {
-				message: req.flash('success')
+				message: req.flash('success'),
+				error: req.flash('error')
 			})
 		}
 	} else {

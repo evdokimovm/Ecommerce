@@ -10,6 +10,13 @@
 					</button>
 					<%= message %>
 				</div>
+			<% } else if (error.length > 0) { %>
+				<div class="alert alert-danger alert-dismissible">
+					<button type="button" class="close" data-dismmiss="alert" aria-label>
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<%= error %>
+				</div>
 			<% } %>
 			<h1>Add a New Product to Category</h1>
 			<form method="post">

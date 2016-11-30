@@ -142,13 +142,17 @@ router.get('/products/:id', function(req, res, next) {
 })
 
 router.get('/product/:id', function(req, res, next) {
-	Product.findById({
+	Product.findOne({
 		_id: req.params.id
-	}, function(err, product) {
-		if (err) return next(err)
-		res.render('main/product', {
-			product: product
-		})
+	}, function(err, foundProduct) {
+		if (foundProduct) {
+			res.render('main/product', {
+				product: foundProduct
+			})
+		} else {
+			req.flash('error', 'Product Not Found')
+			res.redirect('/add-product')
+		}
 	})
 })
 
