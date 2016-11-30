@@ -99,4 +99,62 @@ router.post('/add-product', function(req, res, next) {
 	])
 })
 
+router.get('/delete-category', function(req, res, next) {
+	if (req.user) {
+		if (!req.user.isAdmin) {
+			req.flash('error', 'For Access to Delete Category Page You Need to have Admin Privileges')
+			res.redirect('/edit-profile')
+		} else {
+			res.render('admin/delete-category', {
+				message: req.flash('success'),
+				error: req.flash('error')
+			})
+		}
+	} else {
+		res.redirect('/login')
+	}
+})
+
+router.post('/delete-category', function(req, res, next) {
+	async.waterfall([
+		function(callback) {
+			Category.findOne({
+				name: req.body.name
+			}, function(err, category) {
+				if (err) {
+					req.flash('error', 'Category Not Found')
+					res.redirect('/add-category')
+				} else {
+					callback(null, category)
+				}
+			})
+		},
+		function(category, callback) {
+			var id = category._id
+
+			Product.remove({
+				category: category._id
+			}, function (err, offer) {
+				if (!offer) {
+					callback(null, id)
+				} else {
+					callback(null, id)
+				}
+			})
+		}, function(id) {
+			Category.remove({
+				_id: id
+			}, function(err, remove) {
+				if (err) {
+					req.flash('error', 'Category Not Found')
+					res.redirect('/add-category')
+				} else {
+					req.flash('success', 'Category Removed')
+					res.redirect('/add-category')
+				}
+			})
+		}
+	])
+})
+
 module.exports = router
