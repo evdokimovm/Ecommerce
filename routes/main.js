@@ -1,5 +1,6 @@
 var router = require('express').Router()
 var Product = require('../models/product')
+var Category = require('../models/category')
 var Cart = require('../models/cart')
 var User = require('../models/user')
 var async = require('async')
@@ -121,13 +122,22 @@ router.get('/about', function(req, res, next) {
 })
 
 router.get('/products/:id', function(req, res, next) {
-	Product.find({
-		category: req.params.id
-	}).populate('category').exec(function(err, products) {
-		if (err) return next(err)
-		res.render('main/category', {
-			products: products
-		})
+	Category.findOne({
+		_id: req.params.id
+	}, function(err, foundCategory) {
+		if (foundCategory) {
+			Product.find({
+				category: req.params.id
+			}).populate('category').exec(function(err, products) {
+				if (err) return next(err)
+				res.render('main/category', {
+					products: products
+				})
+			})
+		} else {
+			req.flash('error', 'Category Not Found')
+			res.redirect('/add-category')
+		}
 	})
 })
 
