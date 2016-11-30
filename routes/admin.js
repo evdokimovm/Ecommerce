@@ -23,12 +23,21 @@ router.get('/add-category', function(req, res, next) {
 router.post('/add-category', function(req, res, next) {
 	var category = new Category()
 
-	category.name = req.body.name
+	Category.findOne({
+		name: req.body.name
+	}, function(err, foundCategory) {
+		if (!foundCategory) {
+			category.name = req.body.name
 
-	category.save(function(err) {
-		if (err) return next(err)
-		req.flash('success', 'Successfully Added Category')
-		return res.redirect('/add-category')
+			category.save(function(err) {
+				if (err) return next(err)
+				req.flash('success', 'Successfully Added Category')
+				return res.redirect('/add-category')
+			})
+		} else {
+			req.flash('error', 'Category Already Exist')
+			return res.redirect('/add-category')
+		}
 	})
 })
 
