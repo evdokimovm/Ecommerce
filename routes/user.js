@@ -32,7 +32,8 @@ router.get('/profile', passportConfig.isAuthenticated, function(req, res, next) 
 router.get('/signup', function(req, res, next) {
 	if(req.user) return res.redirect('/profile')
 	res.render('accounts/signup', {
-		errors: req.flash('errors')
+		errors: req.flash('errors'),
+		success: req.flash('success')
 	})
 })
 

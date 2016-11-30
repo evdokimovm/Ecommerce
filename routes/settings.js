@@ -1,4 +1,5 @@
 var User = require('../models/user')
+var Token = require('../models/token')
 var secret = require('../config/secret')
 var router = require('express').Router()
 
@@ -57,6 +58,19 @@ router.post('/edit-profile', function(req, res, next) {
 			if (err) return next(err)
 			req.flash('success', 'Successfully Edited Your Profile')
 			return res.redirect('/edit-profile')
+		})
+	})
+})
+
+router.post('/delete-account', function(req, res, next) {
+	User.remove({
+		_id: req.user._id
+	}, function(err) {
+		Token.remove({
+			user: req.user._id
+		}, function(err) {
+			req.flash('success', 'Account Deleted')
+			res.redirect('/signup')
 		})
 	})
 })
