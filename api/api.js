@@ -59,8 +59,15 @@ router.get('/getUsers', passport.authenticate('bearer', {session: false}), cors(
 				return {
 					email: user.email,
 					history: user.history,
-					isAdmin: user.isAdmin,
-					profile: user.profile
+					account: {
+						isAdmin: user.isAdmin,
+						verified: user.verified
+					},
+					profile: {
+						name: user.profile.name,
+						picture: user.profile.picture,
+						address: user.address
+					}
 				}
 			}))
 		})
