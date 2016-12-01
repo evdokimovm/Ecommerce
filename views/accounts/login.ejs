@@ -3,12 +3,19 @@
 <div class="container">
 	<div class="row">
 		<div class="col-lg-6 col-md-offset-3">
-			<% if (message.length > 0) { %>
+			<% if (success.length > 0) { %>
+				<div class="alert alert-success alert-dismissible">
+					<button type="button" class="close" data-dismmiss="alert" aria-label>
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<%= success %>
+				</div>
+			<% } else if (error.length > 0) { %>
 				<div class="alert alert-danger alert-dismissible">
 					<button type="button" class="close" data-dismmiss="alert" aria-label>
 						<span aria-hidden="true">&times;</span>
 					</button>
-					<%= message %>
+					<%= error %>
 				</div>
 			<% } %>
 			<h1>Login</h1>

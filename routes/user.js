@@ -4,11 +4,14 @@ var User = require('../models/user')
 var Cart = require('../models/cart')
 var passport = require('passport')
 var passportConfig = require('../config/passport')
+var randToken = require('rand-token')
+var sendMailHelper = require('../helpers/send')
 
 router.get('/login', function(req, res) {
 	if(req.user) return res.redirect('/profile')
 	res.render('accounts/login', {
-		message: req.flash('loginMessage')
+		success: req.flash('success'),
+		error: req.flash('error')
 	})
 })
 
@@ -24,7 +27,9 @@ router.get('/profile', passportConfig.isAuthenticated, function(req, res, next) 
 		.populate('history.item')
 		.exec(function(err, foundUser) {
 		res.render('accounts/profile', {
-			user: foundUser
+			user: foundUser,
+			success: req.flash('success'),
+			error: req.flash('error')
 		})
 	})
 })
@@ -48,14 +53,22 @@ router.post('/signup', function(req, res, next) {
 			user.email = req.body.email
 			user.profile.picture = user.gravatar()
 
+			var verification_token = randToken.generate(32)
+			user.verify_token = verification_token
+
 			User.findOne({ email: req.body.email }, function(err, existingUser) {
 				if (existingUser) {
 					req.flash('errors', 'Account with that email address already exist')
 					return res.redirect('/signup')
 				} else {
 					user.save(function(err, user) {
-						if (err) return next(err)
-						callback(null, user)
+						if (err) {
+							return next(err)
+						} else {
+							sendMailHelper(req.body.email, verification_token)
+
+							callback(null, user)
+						}
 					})
 				}
 			})
@@ -69,6 +82,7 @@ router.post('/signup', function(req, res, next) {
 				if(err) return next(err)
 				req.logIn(user, function(err) {
 					if (err) return next(err)
+					req.flash('success', 'Confirm Your Account. To your email sent a confirmation link')
 					res.redirect('/profile')
 				})
 			})
@@ -122,6 +136,44 @@ router.get('/api-page', function(req, res, next) {
 			})
 		})
 	}
+})
+
+router.get('/verify/:token', function(req, res) {
+	var token = req.params.token
+
+	User.findOne({
+		verify_token: token
+	}, function(err, user) {
+		if (user) {
+			req.logIn(user, function(err) {
+				if (!user.verified) {
+					User.update({
+						verify_token: token
+					}, {
+						$set: {
+							verified: true
+						}
+					}, function(err, updated) {
+						if (updated) {
+							req.flash('success', 'Your Account Now Verified')
+							res.redirect('/profile')
+						}
+					})
+				} else {
+					req.flash('success', 'Your Account Already Verified')
+					res.redirect('/profile')
+				}
+			})
+		} else {
+			if (!req.user) {
+				req.flash('error', 'Token Not Correct')
+				res.redirect('/login')
+			} else {
+				req.flash('error', 'Token Not Correct')
+				res.redirect('/profile')
+			}
+		}
+	})
 })
 
 router.get('/logout', function(req, res, next) {

@@ -39,6 +39,16 @@ var UserSchema = new Schema({
 		default: null
 	},
 
+	verify_token: {
+		type: String,
+		default: ''
+	},
+
+	verified: {
+		type: Boolean,
+		default: false
+	},
+
 	address: String,
 	history: [{
 		paid: {

@@ -14,6 +14,12 @@
 				<p>Address: <%= user.address %></p>
 			<% } %>
 
+			<% if (!user.verified) { %>
+				<p><span style="color: #c0392b; font-weight: bold;">Not Verified</span></p>
+			<% } else { %>
+				<p><span style="color: #5cb85c; font-weight: bold;">Verified</span></p>
+			<% } %>
+
 			<% if (!user.isAdmin) { %>
 				<p><span style="color: #c0392b; font-weight: bold;">Not Admin</span></p>
 			<% } else { %>
@@ -23,6 +29,21 @@
 			<a href="/edit-profile" class="btn btn-primary btn-lg">Edit Profile</a>
 		</div>
 		<div class="col-md-6">
+			<% if (success.length > 0) { %>
+				<div class="alert alert-success alert-dismissible">
+					<button type="button" class="close" data-dismmiss="alert" aria-label>
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<%= success %>
+				</div>
+			<% } else if (error.length > 0) { %>
+				<div class="alert alert-danger alert-dismissible">
+					<button type="button" class="close" data-dismmiss="alert" aria-label>
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<%= error %>
+				</div>
+			<% } %>
 			<h2 class="text-center">History</h2>
 			<table class="table table-striped sticky-header">
 				<thread>
