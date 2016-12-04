@@ -7,6 +7,8 @@ var async = require('async')
 var User = require('../models/user')
 var Cart = require('../models/cart')
 var Token = require('../models/token')
+var randToken = require('rand-token')
+var sendMailHelper = require('../helpers/send')
 
 // serialize and deserialize
 passport.serializeUser(function(user, done) {
@@ -41,7 +43,7 @@ passport.use('local-login', new LocalStrategy({
 }))
 
 passport.use(new FacebookStrategy(secret.facebook,
-	function(accessToken, refreshToken, profile, done) {
+	function(req, accessToken, refreshToken, profile, done) {
 		User.findOne({
 			facebook: profile.id
 		}, function (err, user) {
@@ -62,10 +64,17 @@ passport.use(new FacebookStrategy(secret.facebook,
 						newUser.profile.name = profile.displayName
 						newUser.profile.picture = 'https://graph.facebook.com/' + profile.id + '/picture?type=large'
 
-						newUser.save(function(err) {
-							if (err) throw err;
+						var verification_token = randToken.generate(32)
+						newUser.verify_token = verification_token
 
-							callback(null, newUser)
+						newUser.save(function(err) {
+							if (err) {
+								throw err
+							} else {	
+								sendMailHelper(newUser.email, verification_token)
+
+								callback(null, newUser)
+							}
 						})
 					},
 					function(newUser) {
@@ -76,7 +85,7 @@ passport.use(new FacebookStrategy(secret.facebook,
 						cart.save(function(err) {
 							if (err) return next(err)
 
-							return done(err, newUser)
+							return done(err, newUser, req.flash('success', 'Confirm Your Account. To your email sent a confirmation link'))
 						})
 					}
 				])

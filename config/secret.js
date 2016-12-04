@@ -7,6 +7,7 @@ module.exports = {
 		clientID: 'FACEBOOK_APP_ID',
 		clientSecret: 'FACEBOOK_APP_SECRET',
 		profileFields: ['emails', 'displayName'],
+		passReqToCallback: true,
 		callbackURL: 'http://localhost:8080/auth/facebook/callback'
 	}
 }
