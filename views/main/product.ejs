@@ -34,7 +34,7 @@
 					<% } %>
 				</form>
 
-				<% if (user.isAdmin) { %>
+				<% if (user && user.isAdmin) { %>
 					<br>
 					<form method="post" action="/delete-product">
 						<input type="hidden" name="this_product_id" value="<%= product._id %>">
