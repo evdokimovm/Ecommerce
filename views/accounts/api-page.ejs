@@ -45,6 +45,36 @@
 					<% } %>
 				</div>
 			</div>
+			<h3>Get All Categories</h3>
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<% if (user.token) { %>
+						<input type="text" class="form-control" value="/api/getCategories?access_token=<%= user.token.value %>" readonly>
+					<% } else { %>
+						<input type="text" class="form-control" value="/api/getCategories?access_token=access_token" readonly>
+					<% } %>
+				</div>
+			</div>
+			<h3>Get All Products In Category</h3>
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<% if (user.token) { %>
+						<input type="text" class="form-control" value="/api/getAllProductsInCategory?category_name=category&access_token=<%= user.token.value %>" readonly>
+					<% } else { %>
+						<input type="text" class="form-control" value="/api/getAllProductsInCategory?category_name=category&access_token=access_token" readonly>
+					<% } %>
+				</div>
+			</div>
+			<h3>Get Products by Name</h3>
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<% if (user.token) { %>
+						<input type="text" class="form-control" value="/api/getProductsByName?product_name=product&access_token=<%= user.token.value %>" readonly>
+					<% } else { %>
+						<input type="text" class="form-control" value="/api/getProductsByName?product_name=product&access_token=access_token" readonly>
+					<% } %>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

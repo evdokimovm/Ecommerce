@@ -1,5 +1,6 @@
 var router = require('express').Router()
 var Product = require('../models/product')
+var Category = require('../models/category')
 var User = require('../models/user')
 var Token = require('../models/token')
 var passport = require('passport')
@@ -88,6 +89,83 @@ router.get('/getProducts', passport.authenticate('bearer', {session: false}), co
 					}
 				}
 			}))
+		})
+})
+
+router.get('/getCategories', passport.authenticate('bearer', {session: false}), cors(), function(req, res) {
+	Category
+		.find({})
+		.exec(function(err, categories) {
+			res.json(categories.map(function(category) {
+				return {
+					category: category.name
+				}
+			}))
+		})
+})
+
+router.get('/getAllProductsInCategory', passport.authenticate('bearer', {session: false}), cors(), function(req, res) {
+	Category.findOne({
+		name: req.query.category_name
+	}, function(err, foundCategory) {
+		if (!foundCategory) {
+			res.json({
+				error: 'Category Not Found'
+			})
+		} else {
+			Product
+				.find({
+					category: foundCategory._id
+				})
+				.populate('category')
+				.exec(function(err, products) {
+					if (products[0] == null) {
+						res.json({
+							error: 'We Do Not Have Products In This Category'
+						})
+					} else {
+						res.json(products.map(function(product) {
+							return {
+								image: product.image,
+								price: product.price,
+								name: product.name,
+								category: {
+									name: product.category.name
+								}
+							}
+						}))
+					}
+				})
+		}
+	})
+})
+
+router.get('/getProductsByName', passport.authenticate('bearer', {session: false}), cors(), function(req, res) {
+	Product
+		.find({
+			name: {
+				$regex: req.query.product_name,
+				$options: 'i'
+			}
+		})
+		.populate('category')
+		.exec(function(err, products) {
+			if (products[0] == null) {
+				res.json({
+					error: 'We Can Not Find the Products by Your Request'
+				})
+			} else {
+				res.json(products.map(function(product) {
+					return {
+						image: product.image,
+						price: product.price,
+						name: product.name,
+						category: {
+							name: product.category.name
+						}
+					}
+				}))
+			}
 		})
 })
 
