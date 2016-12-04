@@ -1,6 +1,7 @@
 var User = require('../models/user')
 var Token = require('../models/token')
 var secret = require('../config/secret')
+var sendMailHelper = require('../helpers/send')
 var router = require('express').Router()
 
 router.post('/set-admin', function(req, res, next) {
@@ -59,6 +60,19 @@ router.post('/edit-profile', function(req, res, next) {
 			req.flash('success', 'Successfully Edited Your Profile')
 			return res.redirect('/edit-profile')
 		})
+	})
+})
+
+router.post('/resend-verify-link', function(req, res, next) {
+	User.findOne({
+		_id: req.user._id
+	}, function(err, user) {
+		if (err) return next(err)
+
+		sendMailHelper(user.email, user.verify_token)
+
+		req.flash('success', 'Link Sending')
+		res.redirect('/profile')
 	})
 })
 
