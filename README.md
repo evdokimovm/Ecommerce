@@ -47,6 +47,7 @@ Test card numbers for testing stripe here [https://stripe.com/docs/testing#cards
 Run:
 
 ```
+$ bower install
 $ npm install
 $ mongod
 $ node server.js

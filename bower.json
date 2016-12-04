@@ -1,0 +1,10 @@
+{
+	"name": "Ecommerce",
+	"dependencies": {
+		"bootstrap": "3.3.7",
+		"bootstrap-social": "5.1.1",
+		"font-awesome": "4.7.0",
+		"jquery": "2.2.4",
+		"spin.js": "2.3.2"
+	}
+}
