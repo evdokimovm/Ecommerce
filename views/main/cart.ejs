@@ -43,11 +43,15 @@
 		<div class="col-md-3">
 			<div class="list-group">
 				<span class="list-group-item">
-					<h4>Total: $<span class="totalPrice"><%= foundCart.total %></span></h4>
-					<div class="form-group">
-						<input type="hidden" value="<%= foundCart.total %>">
-						<button type="submit" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Pay with Stripe</button>
-					</div>
+					<% if (user && user.verified) { %>
+						<h4>Total: $<span class="totalPrice"><%= foundCart.total %></span></h4>
+						<div class="form-group">
+							<input type="hidden" value="<%= foundCart.total %>">
+							<button type="submit" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Pay with Stripe</button>
+						</div>
+					<% } else if (user && !user.verified) { %>
+						<a href="/edit-profile" class="btn btn-warning btn-lg">Verify Account to Begin Buying</a>
+					<% } %>
 				</span>
 			</div>
 		</div>

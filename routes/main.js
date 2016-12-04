@@ -29,6 +29,9 @@ function paginate(req, res, next) {
 router.get('/cart', function(req, res, next) {
 	if (!req.user) {
 		res.redirect('/login')
+	} else if (req.user && !req.user.verified) {
+		req.flash('error', 'To Access to Cart Page and Payment You Need to Verify Account')
+		res.redirect('/edit-profile')
 	} else {
 		Cart
 			.findOne({

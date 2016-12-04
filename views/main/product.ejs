@@ -27,10 +27,12 @@
 						<input type="text" name="priceValue" id="priceValue" class="form-control" value="<%= product.price.toFixed(2) %>">
 					</div>
 
-					<% if(user) { %>
+					<% if(user && user.verified) { %>
 						<button type="submit" class="btn btn-primary btn-lg">Add to Cart</button>
+					<% } else if (user && !user.verified) { %>
+						<a href="/edit-profile" class="btn btn-warning btn-lg">Verify Account to Begin Buying</a>
 					<% } else { %>
-						<a href="/signup" class="btn btn-warning btn-lg">Signup to begin buying!</a>
+						<a href="/signup" class="btn btn-warning btn-lg">Signup to Begin Buying</a>
 					<% } %>
 				</form>
 
