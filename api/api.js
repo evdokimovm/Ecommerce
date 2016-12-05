@@ -55,11 +55,26 @@ router.get('/getUsers', passport.authenticate('bearer', {session: false}), cors(
 	User
 		.find({})
 		.populate('token')
+		.populate('history.item')
+		.populate('history.category')
 		.exec(function(err, users) {
 			res.json(users.map(function(user) {
 				return {
 					email: user.email,
-					history: user.history,
+					payment_history: user.history.map(function(data) {
+						return {
+							item: {
+								image: data.item.image,
+								price: data.item.price,
+								name: data.item.name,
+								category: {
+									name: data.category.name
+								},
+								paid: data.paid,
+								quantity: data.paid/data.item.price
+							}
+						}
+					}),
 					account: {
 						isAdmin: user.isAdmin,
 						verified: user.verified

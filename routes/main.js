@@ -174,11 +174,14 @@ router.post('/payment', function(req, res, next) {
 	}).then(function(charge) {
 		async.waterfall([
 			function(callback) {
-				Cart.findOne({
-					owner: req.user._id
-				}, function(err, cart) {
-					callback(err, cart)
-				})
+				Cart
+					.findOne({
+						owner: req.user._id
+					})
+					.populate('items.item')
+					.exec(function(err, cart) {
+						callback(err, cart)
+					})
 			},
 			function(cart, callback) {
 				User.findOne({
@@ -188,6 +191,7 @@ router.post('/payment', function(req, res, next) {
 						for(var i = 0; i < cart.items.length; i++) {
 							user.history.push({
 								item: cart.items[i].item,
+								category: cart.items[i].item.category,
 								paid: cart.items[i].price
 							})
 						}
