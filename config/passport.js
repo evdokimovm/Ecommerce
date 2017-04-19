@@ -6,7 +6,6 @@ var secret = require('./secret')
 var async = require('async')
 var User = require('../models/user')
 var Cart = require('../models/cart')
-var Token = require('../models/token')
 var randToken = require('rand-token')
 var sendMailHelper = require('../helpers/send')
 
@@ -95,11 +94,11 @@ passport.use(new FacebookStrategy(secret.facebook,
 ))
 
 passport.use(new BearerStrategy({}, function(token, done) {
-	Token.findOne({
-		value: token
-	}).populate('user').exec(function(err, token) {
-		if (!token) return done(null, false)
-		return done(null, token.user)
+	User.findOne({
+		api_token: token
+	}).exec(function(err, user) {
+		if (!user) return done(null, false)
+		return done(null, user)
 	})
 }))
 

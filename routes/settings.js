@@ -1,5 +1,4 @@
 var User = require('../models/user')
-var Token = require('../models/token')
 var secret = require('../config/secret')
 var sendMailHelper = require('../helpers/send')
 var router = require('express').Router()
@@ -80,12 +79,9 @@ router.post('/delete-account', function(req, res, next) {
 	User.remove({
 		_id: req.user._id
 	}, function(err) {
-		Token.remove({
-			user: req.user._id
-		}, function(err) {
-			req.flash('success', 'Account Deleted')
-			res.redirect('/signup')
-		})
+		if (err) throw err
+		req.flash('success', 'Account Deleted')
+		res.redirect('/signup')
 	})
 })
 
