@@ -8,11 +8,11 @@ var stripe = require('stripe')('SECRET_KEY')
 
 function paginate(req, res, next) {
 	var perPage = 9
-	var page = req.params.page
+	var page = req.params.page || 1
 
 	Product
 		.find({})
-		.skip(perPage * page)
+		.skip((perPage * page) - perPage)
 		.limit(perPage)
 		.populate('category')
 		.exec(function(err, products) {
@@ -20,7 +20,8 @@ function paginate(req, res, next) {
 				if (err) return next(err)
 				res.render('main/product-main', {
 					products: products,
-					pages: count / perPage
+					current: page,
+					pages: Math.ceil(count / perPage)
 				})
 			})
 		})
